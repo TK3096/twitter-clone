@@ -16,7 +16,7 @@ export const UserNavHeader: React.FC<UserNavHeaderProps> = (
 
   const { data } = useUsers(userId)
 
-  const name = data && data.success ? data.data[0].name : ''
+  const name = data.length > 0 ? data[0].name : ''
 
   return <NavHeader showBackArrow title={name} />
 }

@@ -1,3 +1,4 @@
+import type { User } from '@prisma/client'
 import useSWR from 'swr'
 import qs from 'query-string'
 
@@ -10,7 +11,9 @@ export const useUsers = (id?: string) => {
       userId: id,
     },
   })
-  const { data, error, isLoading, mutate } = useSWR(url, fetcher)
+  const { data: fetchedUsers, error, isLoading, mutate } = useSWR(url, fetcher)
+
+  const data: User[] = fetchedUsers?.data || []
 
   return {
     data,
