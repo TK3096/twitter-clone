@@ -1,5 +1,7 @@
 'use client'
 
+import type { APIResponse } from '@/types'
+
 import React from 'react'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
@@ -9,6 +11,7 @@ import { useModal } from '@/hooks/useModal'
 
 import { LoginSchema } from '@/shcemas/auth'
 
+import { toast } from 'sonner'
 import {
   Form,
   FormField,
@@ -40,10 +43,33 @@ export const LoginModal: React.FC = () => {
   const isDirty = form.formState.isDirty
 
   const handleOpenRegisterModal = () => {
+    form.reset()
     onOpen('register')
   }
 
-  const handleSubmitForm = async (values: z.infer<typeof LoginSchema>) => {}
+  const handleSubmitForm = async (values: z.infer<typeof LoginSchema>) => {
+    try {
+      const res = await fetch('/api/users/login', {
+        method: 'POST',
+        body: JSON.stringify(values),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const resBody = (await res.json()) as APIResponse
+
+      if (res.ok && resBody.success) {
+        window.location.reload()
+        handleClose()
+      } else {
+        toast.error(!resBody.success && resBody.message)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error('Something went wrong, please try again')
+    }
+  }
 
   const handleClose = () => {
     form.reset()

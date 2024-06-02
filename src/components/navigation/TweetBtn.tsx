@@ -4,14 +4,18 @@ import React from 'react'
 import { FaFeather } from 'react-icons/fa'
 
 import { useModal } from '@/hooks/useModal'
+import { useCurrentUser } from '@/hooks/useCurrentUser'
 
 import { Button } from '@/components/ui/button'
 
 export const TweeetBtn: React.FC = () => {
+  const user = useCurrentUser()
   const { onOpen } = useModal()
 
   const handleTweet = () => {
-    onOpen('login')
+    if (!user) {
+      onOpen('login')
+    }
   }
 
   return (
