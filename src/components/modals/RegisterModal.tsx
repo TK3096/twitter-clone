@@ -43,6 +43,7 @@ export const RegisterModal: React.FC = () => {
 
   const isOpen = type === 'register' && open
   const isDirty = form.formState.isDirty
+  const loading = form.formState.isSubmitting
 
   const handleOpenLoginModal = () => {
     form.reset()
@@ -103,6 +104,7 @@ export const RegisterModal: React.FC = () => {
                         type='email'
                         label='Email'
                         error={fieldState.error?.message}
+                        disabled={loading}
                         {...field}
                       />
                     </FormControl>
@@ -122,6 +124,7 @@ export const RegisterModal: React.FC = () => {
                         type='text'
                         label='Username'
                         error={fieldState.error?.message}
+                        disabled={loading}
                         {...field}
                       />
                     </FormControl>
@@ -141,6 +144,7 @@ export const RegisterModal: React.FC = () => {
                         type='text'
                         label='Name'
                         error={fieldState.error?.message}
+                        disabled={loading}
                         {...field}
                       />
                     </FormControl>
@@ -160,6 +164,7 @@ export const RegisterModal: React.FC = () => {
                         type='password'
                         label='Password'
                         error={fieldState.error?.message}
+                        disabled={loading}
                         {...field}
                       />
                     </FormControl>
@@ -172,7 +177,7 @@ export const RegisterModal: React.FC = () => {
               <Button
                 type='submit'
                 className='w-full rounded-full font-bold text-md'
-                disabled={!isDirty}
+                disabled={!isDirty || loading}
               >
                 Create an account
               </Button>

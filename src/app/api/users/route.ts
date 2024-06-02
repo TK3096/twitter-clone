@@ -12,7 +12,6 @@ import {
   getUserByEmail,
   create,
   getUserByUsername,
-  getUserById,
   getUsers,
 } from '@/data/user'
 
@@ -82,27 +81,12 @@ export const POST = async (req: NextRequest) => {
 }
 
 export const GET = async (req: NextRequest) => {
-  const { searchParams } = new URL(req.url)
-  const userId = searchParams.get('userId')
   const session = await auth()
 
-  const result: User[] = []
-
-  if (userId) {
-    const user = await getUserById(userId)
-
-    if (user) {
-      result.push(user)
-    }
-  } else {
-    const users = await getUsers(session?.user?.id)
-    if (users) {
-      result.push(...users)
-    }
-  }
+  const users: User[] = await getUsers(session?.user?.id)
 
   return NextResponse.json<APIResponse<User[]>>(
-    { success: true, data: result },
+    { success: true, data: users },
     { status: 200 },
   )
 }

@@ -1,8 +1,12 @@
+import type { User } from '@prisma/client'
+
 import { create } from 'zustand'
 
-type ModalType = 'login' | 'register'
+type ModalType = 'login' | 'register' | 'edit-user'
 
-interface ModalData {}
+interface ModalData {
+  user?: User
+}
 
 interface ModalStore {
   type: ModalType | null

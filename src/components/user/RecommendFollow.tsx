@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-import { useUsers } from '@/hooks/useUser'
+import { useUsers } from '@/hooks/useUsers'
 import { UserAvart } from './UserAvatar'
 
 export const ReccomendFollow: React.FC = () => {

@@ -1,0 +1,63 @@
+import type { APIResponse } from '@/types'
+import type { UserWithFolloers } from '@/types'
+import type { User } from '@prisma/client'
+
+import { NextRequest, NextResponse } from 'next/server'
+
+import { EditUserSchema } from '@/shcemas/user'
+
+import { getUserById, update } from '@/data/user'
+
+export const GET = async (
+  req: NextRequest,
+  { params }: { params: { userId: string } },
+) => {
+  const { userId } = params
+  const user = await getUserById(userId)
+
+  return NextResponse.json<APIResponse<UserWithFolloers | null>>({
+    success: true,
+    data: user,
+  })
+}
+
+export const PATCH = async (
+  req: NextRequest,
+  { params }: { params: { userId: string } },
+) => {
+  const { userId } = params
+  const body = await req.json()
+  const validateFields = EditUserSchema.safeParse(body)
+
+  if (!validateFields.success) {
+    return NextResponse.json<APIResponse>(
+      {
+        success: false,
+        message: 'Invalid fields',
+      },
+      { status: 400 },
+    )
+  }
+
+  const { name, email, bio } = validateFields.data
+
+  const updated = await update(userId, { name, email, bio })
+
+  if (!updated) {
+    return NextResponse.json<APIResponse>(
+      {
+        success: false,
+        message: 'Failed to update user',
+      },
+      { status: 500 },
+    )
+  }
+
+  return NextResponse.json<APIResponse<User>>(
+    {
+      success: true,
+      data: updated,
+    },
+    { status: 200 },
+  )
+}

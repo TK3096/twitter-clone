@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { useUsers } from '@/hooks/useUser'
+import { useUser } from '@/hooks/useUser'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
 
 import { UserHero } from '@/components/user/UserHero'
@@ -17,9 +17,8 @@ export const ContentContainer: React.FC<ContentContainerProps> = (
 ) => {
   const { userId } = props
 
-  const currentUser = useCurrentUser()
-  const { data, isLoading } = useUsers(userId)
-  const user = data[0]
+  const user = useCurrentUser()
+  const { data, isLoading, mutate } = useUser(userId)
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -28,19 +27,11 @@ export const ContentContainer: React.FC<ContentContainerProps> = (
   return (
     <div>
       <UserHero
-        profileImage={user?.profileImage || ''}
-        coverImage={user?.coverImage || ''}
-        name={user.name}
+        profileImage={data?.profileImage || ''}
+        coverImage={data?.coverImage || ''}
+        name={data.name}
       />
-      <UserBio
-        isOwner={currentUser?.id === userId}
-        name={user.name}
-        username={user.username}
-        bio={user.bio || ''}
-        createdAt={user.createdAt.toString()}
-        follwoingIds={user.followingIds}
-        followers={0}
-      />
+      <UserBio isOwner={user?.id === userId} user={data} />
     </div>
   )
 }

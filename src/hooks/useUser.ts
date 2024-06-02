@@ -1,19 +1,17 @@
-import type { User } from '@prisma/client'
+import type { UserWithFolloers } from '@/types'
 import useSWR from 'swr'
-import qs from 'query-string'
 
 import { fetcher } from '@/lib/utils'
 
-export const useUsers = (id?: string) => {
-  const url = qs.stringifyUrl({
-    url: `/api/users`,
-    query: {
-      userId: id,
-    },
-  })
-  const { data: fetchedUsers, error, isLoading, mutate } = useSWR(url, fetcher)
+export const useUser = (id: string) => {
+  const {
+    data: fetchedUser,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR(`/api/users/${id}`, fetcher)
 
-  const data: User[] = fetchedUsers?.data || []
+  const data: UserWithFolloers = fetchedUser?.data || null
 
   return {
     data,

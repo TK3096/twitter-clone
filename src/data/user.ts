@@ -1,4 +1,5 @@
 import type { User } from '@prisma/client'
+import type { UserWithFolloers } from '@/types'
 
 import { db } from '@/lib/db'
 
@@ -11,6 +12,24 @@ export const create = async (
     })
 
     return user
+  } catch {
+    return null
+  }
+}
+
+export const update = async (
+  id: string,
+  data: Pick<User, 'name' | 'bio' | 'email'>,
+) => {
+  try {
+    const upated = await db.user.update({
+      where: {
+        id,
+      },
+      data,
+    })
+
+    return upated
   } catch {
     return null
   }
@@ -51,8 +70,15 @@ export const getUserById = async (id: string) => {
         id,
       },
     })
+    const followersCount = await db.user.count({
+      where: {
+        followingIds: {
+          has: id,
+        },
+      },
+    })
 
-    return user
+    return { ...user, followers: followersCount } as UserWithFolloers
   } catch {
     return null
   }
@@ -73,6 +99,6 @@ export const getUsers = async (excludeId?: string) => {
 
     return users
   } catch {
-    return null
+    return []
   }
 }

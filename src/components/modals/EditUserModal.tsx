@@ -1,24 +1,18 @@
 'use client'
 
 import type { APIResponse } from '@/types'
+import type { User } from '@prisma/client'
 
-import React from 'react'
-import * as z from 'zod'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+
+import { EditUserSchema } from '@/shcemas/user'
 
 import { useModal } from '@/hooks/useModal'
 
-import { LoginSchema } from '@/shcemas/auth'
-
 import { toast } from 'sonner'
-import {
-  Form,
-  FormField,
-  FormControl,
-  FormMessage,
-  FormItem,
-} from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -27,48 +21,50 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { FloatingInput } from '@/components/common/FloatingInput'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Form,
+  FormField,
+  FormControl,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form'
 
-export const LoginModal: React.FC = () => {
-  const { open, type, onClose, onOpen } = useModal()
+export const EditUserModal: React.FC = () => {
+  const { type, open, onClose, data } = useModal()
 
   const form = useForm({
-    resolver: zodResolver(LoginSchema),
+    resolver: zodResolver(EditUserSchema),
     defaultValues: {
       email: '',
-      password: '',
+      name: '',
+      bio: '',
     },
   })
 
-  const isOpen = type === 'login' && open
+  const isOpen = type === 'edit-user' && open
   const isDirty = form.formState.isDirty
-  const loading = form.formState.isSubmitting
 
-  const handleOpenRegisterModal = () => {
-    form.reset()
-    onOpen('register')
-  }
-
-  const handleSubmitForm = async (values: z.infer<typeof LoginSchema>) => {
+  const handleSubmitForm = async (values: z.infer<typeof EditUserSchema>) => {
     try {
-      const res = await fetch('/api/users/login', {
-        method: 'POST',
-        body: JSON.stringify(values),
+      const res = await fetch(`/api/users/${data?.user?.id!}`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify(values),
       })
 
-      const resBody = (await res.json()) as APIResponse
+      const resBody = (await res.json()) as APIResponse<User>
 
       if (res.ok && resBody.success) {
-        window.location.reload()
+        toast.success('Profile updated successfully')
         handleClose()
       } else {
         toast.error(!resBody.success && resBody.message)
       }
-    } catch (error) {
-      console.log(error)
-      toast.error('Something went wrong, please try again')
+    } catch {
+      toast.error('Something went wrong. Please try again')
     }
   }
 
@@ -77,11 +73,21 @@ export const LoginModal: React.FC = () => {
     onClose()
   }
 
+  useEffect(() => {
+    if (data?.user) {
+      form.setValue('email', data.user.email)
+      form.setValue('name', data.user.name)
+      form.setValue('bio', data.user.bio || '')
+    }
+  }, [data?.user, form])
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader className='pb-8'>
-          <DialogTitle className='text-3xl font-bold'>Login</DialogTitle>
+          <DialogTitle className='text-3xl font-bold'>
+            Edit your profile
+          </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -101,7 +107,6 @@ export const LoginModal: React.FC = () => {
                         type='email'
                         label='Email'
                         error={fieldState.error?.message}
-                        disabled={loading}
                         {...field}
                       />
                     </FormControl>
@@ -111,17 +116,34 @@ export const LoginModal: React.FC = () => {
               />
 
               <FormField
-                name='password'
+                name='name'
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormControl>
                       <FloatingInput
-                        id='password'
-                        type='password'
-                        label='Password'
+                        id='name'
+                        type='text'
+                        label='Name'
                         error={fieldState.error?.message}
-                        disabled={loading}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name='bio'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        rows={6}
+                        placeholder='Tell us about yourself'
+                        className='border-2'
                         {...field}
                       />
                     </FormControl>
@@ -130,23 +152,15 @@ export const LoginModal: React.FC = () => {
                 )}
               />
             </div>
-            <div className='space-y-4'>
+
+            <div>
               <Button
                 type='submit'
                 className='w-full rounded-full font-bold text-md'
-                disabled={!isDirty || loading}
+                disabled={!isDirty}
               >
-                Login
+                Save
               </Button>
-              <p className='text-center text-sm text-muted-foreground'>
-                First time using Twitter?{' '}
-                <span
-                  className='font-semibold text-white cursor-pointer'
-                  onClick={handleOpenRegisterModal}
-                >
-                  Create an account
-                </span>
-              </p>
             </div>
           </form>
         </Form>

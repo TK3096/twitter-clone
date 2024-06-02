@@ -3,7 +3,7 @@
 import React from 'react'
 import { NavHeader } from '@/components/navigation/NavHeader'
 
-import { useUsers } from '@/hooks/useUser'
+import { useUser } from '@/hooks/useUser'
 
 interface UserNavHeaderProps {
   userId: string
@@ -14,9 +14,9 @@ export const UserNavHeader: React.FC<UserNavHeaderProps> = (
 ) => {
   const { userId } = props
 
-  const { data } = useUsers(userId)
+  const { data } = useUser(userId)
 
-  const name = data.length > 0 ? data[0].name : ''
+  const name = data?.name ?? ''
 
   return <NavHeader showBackArrow title={name} />
 }
