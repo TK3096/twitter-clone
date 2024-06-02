@@ -43,3 +43,36 @@ export const getUserByUsername = async (username: string) => {
     return null
   }
 }
+
+export const getUserById = async (id: string) => {
+  try {
+    const user = await db.user.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    return user
+  } catch {
+    return null
+  }
+}
+
+export const getUsers = async (excludeId?: string) => {
+  try {
+    const users = await db.user.findMany({
+      where: {
+        NOT: {
+          id: excludeId,
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    return users
+  } catch {
+    return null
+  }
+}

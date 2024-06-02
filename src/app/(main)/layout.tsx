@@ -1,4 +1,5 @@
 import { Sidebar } from '@/components/navigation/Sidebar'
+import { ReccomendFollow } from '@/components/user/RecommendFollow'
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -9,7 +10,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
           {children}
         </main>
         <div className='hidden lg:block lg:border-l-[1px] lg:border-neutral-800'>
-          right
+          <ReccomendFollow />
         </div>
       </div>
     </div>

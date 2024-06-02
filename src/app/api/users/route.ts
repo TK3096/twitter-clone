@@ -1,11 +1,20 @@
 import type { APIResponse } from '@/types'
+import type { User } from '@prisma/client'
 
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 
+import { auth } from '@/auth'
+
 import { RegisterSchema } from '@/shcemas/auth'
 
-import { getUserByEmail, create, getUserByUsername } from '@/data/user'
+import {
+  getUserByEmail,
+  create,
+  getUserByUsername,
+  getUserById,
+  getUsers,
+} from '@/data/user'
 
 export const POST = async (req: NextRequest) => {
   const body = await req.json()
@@ -69,5 +78,31 @@ export const POST = async (req: NextRequest) => {
       data: { id: user.id },
     },
     { status: 201 },
+  )
+}
+
+export const GET = async (req: NextRequest) => {
+  const { searchParams } = new URL(req.url)
+  const userId = searchParams.get('userId')
+  const session = await auth()
+
+  const result: User[] = []
+
+  if (userId) {
+    const user = await getUserById(userId)
+
+    if (user) {
+      result.push(user)
+    }
+  } else {
+    const users = await getUsers(session?.user?.id)
+    if (users) {
+      result.push(...users)
+    }
+  }
+
+  return NextResponse.json<APIResponse<User[]>>(
+    { success: true, data: result },
+    { status: 200 },
   )
 }
