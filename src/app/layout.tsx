@@ -3,6 +3,9 @@ import type { Metadata } from 'next'
 import { Open_Sans } from 'next/font/google'
 
 import { ThemeProvider } from '@/providers/ThemeProvider'
+import { ModalProvider } from '@/providers/ModalProvider'
+
+import { Toaster } from '@/components/ui/sonner'
 
 import { cn } from '@/lib/utils'
 
@@ -25,6 +28,8 @@ export default function RootLayout({
       <body className={cn(font.className)}>
         <ThemeProvider attribute='class' defaultTheme='dark'>
           {children}
+          <ModalProvider />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

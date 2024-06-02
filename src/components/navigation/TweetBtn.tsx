@@ -3,10 +3,16 @@
 import React from 'react'
 import { FaFeather } from 'react-icons/fa'
 
+import { useModal } from '@/hooks/useModal'
+
 import { Button } from '@/components/ui/button'
 
 export const TweeetBtn: React.FC = () => {
-  const handleTweet = () => {}
+  const { onOpen } = useModal()
+
+  const handleTweet = () => {
+    onOpen('login')
+  }
 
   return (
     <Button
