@@ -4,9 +4,10 @@ import type { Post } from '@prisma/client'
 import type { APIResponse, PostWithUserAndCommentInfo } from '@/types'
 
 import React from 'react'
+import { useRouter } from 'next/navigation'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai'
+import { AiOutlineHeart, AiOutlineMessage, AiFillHeart } from 'react-icons/ai'
 
 import { useCurrentUser } from '@/hooks/useCurrentUser'
 
@@ -22,14 +23,19 @@ interface PostItemProps {
 export const PostItem: React.FC<PostItemProps> = (props: PostItemProps) => {
   const { post, cb } = props
 
+  const router = useRouter()
+
   const currentUser = useCurrentUser()
 
   const { body, user, createdAt, comments } = post
   const { profileImage, name, username } = user
 
   const duration = dayjs(createdAt).fromNow(true)
+  const isLiked = post.likedIds.includes(currentUser?.id as string)
 
-  const handleLike = async () => {
+  const handleLike = async (event: React.MouseEvent) => {
+    event.stopPropagation()
+
     try {
       const res = await fetch(`/api/posts/${post.id}/like`, {
         method: 'PATCH',
@@ -56,8 +62,15 @@ export const PostItem: React.FC<PostItemProps> = (props: PostItemProps) => {
     }
   }
 
+  const handleClickPost = () => {
+    router.push(`/posts/${post.id}`)
+  }
+
   return (
-    <div className='px-4 py-5 flex gap-3 border-b-[1px]'>
+    <div
+      className='px-4 py-5 flex gap-3 border-b-[1px] cursor-pointer'
+      onClick={handleClickPost}
+    >
       <UserAvatar src={profileImage || ''} name={name} />
       <div className='flex flex-col'>
         <div className='flex items-center gap-2'>
@@ -75,7 +88,11 @@ export const PostItem: React.FC<PostItemProps> = (props: PostItemProps) => {
             className='text-muted-foreground flex items-center gap-2 cursor-pointer'
             onClick={handleLike}
           >
-            <AiOutlineHeart size={16} />
+            {isLiked ? (
+              <AiFillHeart size={16} color='red' />
+            ) : (
+              <AiOutlineHeart size={16} />
+            )}
             <span>{post.likedIds.length}</span>
           </div>
         </div>

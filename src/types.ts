@@ -10,3 +10,7 @@ export type PostWithUserAndCommentInfo = Post & {
   user: Pick<User, 'id' | 'profileImage' | 'name' | 'username'>
   comments: Pick<Comment, 'id'>[]
 }
+
+export type CommentWithUser = Comment & {
+  user: Pick<User, 'id' | 'profileImage' | 'name' | 'username'>
+}

@@ -61,6 +61,9 @@ export const getPostById = async (id: string) => {
         comments: {
           select: {
             id: true,
+            body: true,
+            createdAt: true,
+            userId: true,
           },
         },
       },
