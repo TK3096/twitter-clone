@@ -3,9 +3,11 @@
 import React from 'react'
 
 import { useUser } from '@/hooks/useUser'
+import { usePosts } from '@/hooks/usePosts'
 
 import { UserHero } from '@/components/user/UserHero'
 import { UserBio } from '@/components/user/UserBio'
+import { PostFeed } from '@/components/post/PostFeed'
 
 interface ContentContainerProps {
   userId: string
@@ -16,20 +18,22 @@ export const ContentContainer: React.FC<ContentContainerProps> = (
 ) => {
   const { userId } = props
 
-  const { data, isLoading, mutate } = useUser(userId)
+  const fetchedUser = useUser(userId)
+  const fetchedPosts = usePosts({ userId })
 
-  if (isLoading) {
+  if (fetchedUser.isLoading) {
     return <div>Loading...</div>
   }
 
   return (
     <div>
       <UserHero
-        profileImage={data?.profileImage || ''}
-        coverImage={data?.coverImage || ''}
-        name={data.name}
+        profileImage={fetchedUser.data?.profileImage || ''}
+        coverImage={fetchedUser.data?.coverImage || ''}
+        name={fetchedUser.data.name}
       />
-      <UserBio user={data} mutate={mutate} />
+      <UserBio user={fetchedUser.data} mutate={fetchedUser.mutate} />
+      <PostFeed data={fetchedPosts.data} />
     </div>
   )
 }

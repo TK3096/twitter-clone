@@ -14,9 +14,16 @@ export const create = async (data: Pick<Post, 'userId' | 'body'>) => {
   }
 }
 
-export const getPosts = async () => {
+export const getPosts = async (filter?: { userId: string }) => {
   try {
+    let condition = {}
+
+    if (filter?.userId) {
+      condition = { ...condition, userId: filter.userId }
+    }
+
     const posts = await db.post.findMany({
+      where: condition,
       orderBy: {
         createdAt: 'desc',
       },

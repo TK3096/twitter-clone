@@ -65,7 +65,12 @@ export const POST = async (req: NextRequest) => {
 }
 
 export const GET = async (req: NextRequest) => {
-  const posts = await getPosts()
+  const { searchParams } = new URL(req.url)
+  const filter = {
+    userId: searchParams.get('userId') as string,
+  }
+
+  const posts = await getPosts(filter)
 
   return NextResponse.json<APIResponse<PostWithUserInfo[]>>(
     {
