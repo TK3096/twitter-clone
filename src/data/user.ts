@@ -19,7 +19,7 @@ export const create = async (
 
 export const update = async (
   id: string,
-  data: Pick<User, 'name' | 'bio' | 'email'>,
+  data: Pick<User, 'name' | 'bio' | 'email' | 'profileImage' | 'coverImage'>,
 ) => {
   try {
     const upated = await db.user.update({

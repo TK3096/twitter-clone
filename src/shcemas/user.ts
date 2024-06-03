@@ -6,6 +6,6 @@ export const EditUserSchema = z.object({
     .string()
     .min(3, { message: 'Name must be at least 3 characters long' }),
   bio: z.string(),
-  //   profileImage: z.string(),
-  //   coverImage: z.string(),
+  profileImage: z.string(),
+  coverImage: z.string(),
 })

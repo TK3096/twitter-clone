@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { EditUserSchema } from '@/shcemas/user'
 
-import { getUserById, update } from '@/data/user'
+import { getUserByEmail, getUserById, update } from '@/data/user'
 
 export const GET = async (
   req: NextRequest,
@@ -39,9 +39,27 @@ export const PATCH = async (
     )
   }
 
-  const { name, email, bio } = validateFields.data
+  const { name, email, bio, profileImage, coverImage } = validateFields.data
 
-  const updated = await update(userId, { name, email, bio })
+  const existingUser = await getUserByEmail(email)
+
+  if (existingUser && existingUser.id !== userId) {
+    return NextResponse.json<APIResponse>(
+      {
+        success: false,
+        message: 'Email already in use',
+      },
+      { status: 400 },
+    )
+  }
+
+  const updated = await update(userId, {
+    name,
+    email,
+    bio,
+    profileImage,
+    coverImage,
+  })
 
   if (!updated) {
     return NextResponse.json<APIResponse>(

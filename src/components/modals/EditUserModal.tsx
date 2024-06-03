@@ -29,6 +29,7 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form'
+import { ImageUpload } from '@/components/common/ImageUpload'
 
 export const EditUserModal: React.FC = () => {
   const { type, open, onClose, data, cb } = useModal()
@@ -36,6 +37,8 @@ export const EditUserModal: React.FC = () => {
   const form = useForm({
     resolver: zodResolver(EditUserSchema),
     defaultValues: {
+      profileImage: '',
+      coverImage: '',
       email: '',
       name: '',
       bio: '',
@@ -81,6 +84,8 @@ export const EditUserModal: React.FC = () => {
       form.setValue('email', data.user.email)
       form.setValue('name', data.user.name)
       form.setValue('bio', data.user.bio || '')
+      form.setValue('profileImage', data.user.profileImage || '')
+      form.setValue('coverImage', data.user.coverImage || '')
     }
   }, [data?.user, form])
 
@@ -99,6 +104,38 @@ export const EditUserModal: React.FC = () => {
             className='space-y-20'
           >
             <div className='space-y-3'>
+              <FormField
+                name='profileImage'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <ImageUpload
+                        onChange={field.onChange}
+                        value={field.value}
+                        label='Profile Image'
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name='coverImage'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <ImageUpload
+                        onChange={field.onChange}
+                        value={field.value}
+                        label='Cover Image'
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 name='email'
                 control={form.control}
