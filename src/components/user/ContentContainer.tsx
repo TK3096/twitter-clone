@@ -33,7 +33,7 @@ export const ContentContainer: React.FC<ContentContainerProps> = (
         name={fetchedUser.data.name}
       />
       <UserBio user={fetchedUser.data} mutate={fetchedUser.mutate} />
-      <PostFeed data={fetchedPosts.data} />
+      <PostFeed data={fetchedPosts.data} cb={fetchedPosts.mutate} />
     </div>
   )
 }

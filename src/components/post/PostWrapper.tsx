@@ -13,7 +13,7 @@ export const PostWrapper: React.FC = () => {
   return (
     <div>
       <PostForm cb={mutate} />
-      <PostFeed data={data} />
+      <PostFeed data={data} cb={mutate} />
     </div>
   )
 }

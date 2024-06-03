@@ -8,15 +8,16 @@ import { PostItem } from '@/components/post/PostItem'
 
 interface PostFeedProps {
   data: PostWithUserAndCommentInfo[]
+  cb?: () => void
 }
 
 export const PostFeed: React.FC<PostFeedProps> = (props: PostFeedProps) => {
-  const { data } = props
+  const { data, cb } = props
 
   return (
     <div>
       {data.map((post) => (
-        <PostItem key={post.id} post={post} />
+        <PostItem key={post.id} post={post} cb={cb} />
       ))}
     </div>
   )
