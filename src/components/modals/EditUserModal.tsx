@@ -31,7 +31,7 @@ import {
 } from '@/components/ui/form'
 
 export const EditUserModal: React.FC = () => {
-  const { type, open, onClose, data } = useModal()
+  const { type, open, onClose, data, cb } = useModal()
 
   const form = useForm({
     resolver: zodResolver(EditUserSchema),
@@ -58,6 +58,9 @@ export const EditUserModal: React.FC = () => {
       const resBody = (await res.json()) as APIResponse<User>
 
       if (res.ok && resBody.success) {
+        if (cb) {
+          cb()
+        }
         toast.success('Profile updated successfully')
         handleClose()
       } else {

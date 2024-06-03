@@ -13,10 +13,11 @@ import { Button } from '@/components/ui/button'
 interface UserBioProps {
   isOwner: boolean
   user: UserWithFolloers
+  mutate: () => void
 }
 
 export const UserBio: React.FC<UserBioProps> = (props: UserBioProps) => {
-  const { isOwner, user } = props
+  const { isOwner, user, mutate } = props
 
   const { name, username, bio, createdAt, followers, followingIds } = user
 
@@ -24,9 +25,13 @@ export const UserBio: React.FC<UserBioProps> = (props: UserBioProps) => {
 
   const handleClick = () => {
     if (isOwner) {
-      onOpen('edit-user', {
-        user,
-      })
+      onOpen(
+        'edit-user',
+        {
+          user,
+        },
+        mutate,
+      )
     }
   }
 

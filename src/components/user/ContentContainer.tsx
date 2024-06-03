@@ -31,7 +31,7 @@ export const ContentContainer: React.FC<ContentContainerProps> = (
         coverImage={data?.coverImage || ''}
         name={data.name}
       />
-      <UserBio isOwner={user?.id === userId} user={data} />
+      <UserBio isOwner={user?.id === userId} user={data} mutate={mutate} />
     </div>
   )
 }
