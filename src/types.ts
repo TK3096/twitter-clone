@@ -1,4 +1,4 @@
-import type { Post, User } from '@prisma/client'
+import type { Post, User, Comment } from '@prisma/client'
 
 export type APIResponse<T = object> =
   | { success: true; data: T }
@@ -6,6 +6,7 @@ export type APIResponse<T = object> =
 
 export type UserWithFollower = User & { followers: string[] }
 
-export type PostWithUserInfo = Post & {
+export type PostWithUserAndCommentInfo = Post & {
   user: Pick<User, 'id' | 'profileImage' | 'name' | 'username'>
+  comments: Pick<Comment, 'id'>[]
 }

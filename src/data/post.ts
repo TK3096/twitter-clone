@@ -36,6 +36,11 @@ export const getPosts = async (filter?: { userId: string }) => {
             name: true,
           },
         },
+        comments: {
+          select: {
+            id: true,
+          },
+        },
       },
     })
 

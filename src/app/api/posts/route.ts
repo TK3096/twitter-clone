@@ -1,5 +1,5 @@
 import type { Post } from '@prisma/client'
-import type { PostWithUserInfo } from '@/types'
+import type { PostWithUserAndCommentInfo } from '@/types'
 import type { APIResponse } from '@/types'
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -72,7 +72,7 @@ export const GET = async (req: NextRequest) => {
 
   const posts = await getPosts(filter)
 
-  return NextResponse.json<APIResponse<PostWithUserInfo[]>>(
+  return NextResponse.json<APIResponse<PostWithUserAndCommentInfo[]>>(
     {
       success: true,
       data: posts,
