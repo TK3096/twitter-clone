@@ -19,7 +19,26 @@ export const {
         session.user.id = token.sub
       }
 
+      if (session.user && token.followingIds) {
+        session.user.followingIds = token.followingIds as string[]
+      }
+
       return session
+    },
+    async jwt({ token }) {
+      if (!token.sub) {
+        return token
+      }
+
+      const user = await getUserById(token.sub)
+
+      if (!user) {
+        return token
+      }
+
+      token.followingIds = user.followingIds
+
+      return token
     },
   },
   adapter: PrismaAdapter(db),

@@ -1,4 +1,4 @@
-import type { UserWithFolloers } from '@/types'
+import type { UserWithFollower } from '@/types'
 import useSWR from 'swr'
 
 import { fetcher } from '@/lib/utils'
@@ -11,7 +11,7 @@ export const useUser = (id: string) => {
     mutate,
   } = useSWR(`/api/users/${id}`, fetcher)
 
-  const data: UserWithFolloers = fetchedUser?.data || null
+  const data: UserWithFollower = fetchedUser?.data || null
 
   return {
     data,

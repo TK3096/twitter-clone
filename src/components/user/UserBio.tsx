@@ -1,29 +1,65 @@
 'use client'
 
-import type { UserWithFolloers } from '@/types'
+import type { APIResponse, UserWithFollower } from '@/types'
+import type { User } from 'next-auth'
 
 import React from 'react'
 import dayjs from 'dayjs'
 import { BiCalendar } from 'react-icons/bi'
+import { FaCheck } from 'react-icons/fa'
 
+import { useCurrentUser } from '@/hooks/useCurrentUser'
 import { useModal } from '@/hooks/useModal'
 
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 
 interface UserBioProps {
-  isOwner: boolean
-  user: UserWithFolloers
+  user: UserWithFollower
   mutate: () => void
 }
 
 export const UserBio: React.FC<UserBioProps> = (props: UserBioProps) => {
-  const { isOwner, user, mutate } = props
+  const { user, mutate } = props
 
   const { name, username, bio, createdAt, followers, followingIds } = user
+  const currentUser = useCurrentUser()
+
+  const isOwner = currentUser?.id === user.id
+  const isFollow = user.followers.includes(currentUser?.id as string)
 
   const { onOpen } = useModal()
 
+  const handleFollow = async () => {
+    try {
+      const res = await fetch(`/api/users/${currentUser?.id}/follow`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          followId: user.id,
+        }),
+      })
+
+      const resBody = (await res.json()) as APIResponse<User>
+
+      if (res.ok && resBody.success) {
+        mutate()
+      } else {
+        toast.error(!resBody.success && resBody.message)
+      }
+    } catch {
+      toast.error('Something went wrong, please try again')
+    }
+  }
+
   const handleClick = () => {
+    if (!currentUser) {
+      onOpen('login')
+      return
+    }
+
     if (isOwner) {
       onOpen(
         'edit-user',
@@ -32,6 +68,8 @@ export const UserBio: React.FC<UserBioProps> = (props: UserBioProps) => {
         },
         mutate,
       )
+    } else {
+      handleFollow()
     }
   }
 
@@ -39,10 +77,11 @@ export const UserBio: React.FC<UserBioProps> = (props: UserBioProps) => {
     <div className='border-b-[1px] border-neutral-800 pb-4'>
       <div className='flex justify-end p-2'>
         <Button
-          className='rounded-full h-8 w-16 capitalize font-semibold'
+          className='rounded-full h-8 px-3 w-fit capitalize font-semibold'
           onClick={handleClick}
         >
-          {isOwner ? 'Edit' : 'Follow'}
+          {isFollow && <FaCheck className='mr-2' />}
+          {isOwner ? 'Edit' : isFollow ? 'Unfollow' : 'Follow'}
         </Button>
       </div>
       <div className='mt-8 px-4'>
@@ -64,7 +103,7 @@ export const UserBio: React.FC<UserBioProps> = (props: UserBioProps) => {
           </div>
 
           <div className='flex items-center gap-1'>
-            <p className='text-white'>{followers}</p>
+            <p className='text-white'>{followers.length}</p>
             <p className='text-muted-foreground'>Followers</p>
           </div>
         </div>

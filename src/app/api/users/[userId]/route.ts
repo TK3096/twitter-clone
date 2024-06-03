@@ -1,5 +1,5 @@
 import type { APIResponse } from '@/types'
-import type { UserWithFolloers } from '@/types'
+import type { UserWithFollower } from '@/types'
 import type { User } from '@prisma/client'
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -15,7 +15,7 @@ export const GET = async (
   const { userId } = params
   const user = await getUserById(userId)
 
-  return NextResponse.json<APIResponse<UserWithFolloers | null>>({
+  return NextResponse.json<APIResponse<UserWithFollower | null>>({
     success: true,
     data: user,
   })

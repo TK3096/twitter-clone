@@ -4,7 +4,7 @@ export type APIResponse<T = object> =
   | { success: true; data: T }
   | { success: false; message: string }
 
-export type UserWithFolloers = User & { followers: number }
+export type UserWithFollower = User & { followers: string[] }
 
 export type PostWithUserInfo = Post & {
   user: Pick<User, 'id' | 'profileImage' | 'name' | 'username'>
