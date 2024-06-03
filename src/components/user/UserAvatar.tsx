@@ -4,14 +4,16 @@ import { cn } from '@/lib/utils'
 
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 
-interface UserAvartProps {
+interface UserAvatarProps {
   name: string
   src: string
   size?: 'small' | 'large'
   className?: string
 }
 
-export const UserAvart: React.FC<UserAvartProps> = (props: UserAvartProps) => {
+export const UserAvatar: React.FC<UserAvatarProps> = (
+  props: UserAvatarProps,
+) => {
   const { name, src, size = 'small', className } = props
 
   let imageSize = 0

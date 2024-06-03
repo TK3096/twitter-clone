@@ -4,7 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 
 import { useUsers } from '@/hooks/useUsers'
-import { UserAvart } from './UserAvatar'
+import { UserAvatar } from './UserAvatar'
 
 export const ReccomendFollow: React.FC = () => {
   const { data } = useUsers()
@@ -17,7 +17,7 @@ export const ReccomendFollow: React.FC = () => {
           {data.map((u) => (
             <Link key={u.username} href={`/users/${u.id}`}>
               <div className='flex items-center gap-3'>
-                <UserAvart src={u.profileImage || ''} name={u.name} />
+                <UserAvatar src={u.profileImage || ''} name={u.name} />
                 <div>
                   <p className='text-white font-bold text-md'>{u.name}</p>
                   <p className='text-muted-foreground text-sm'>@{u.username}</p>

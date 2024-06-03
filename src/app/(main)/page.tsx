@@ -1,16 +1,12 @@
-'use client'
-
 import { NavHeader } from '@/components/navigation/NavHeader'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { PostForm } from '@/components/post/PostForm'
+import { PostWrapper } from '@/components/post/PostWrapper'
 
 const HomePage = () => {
-  const user = useCurrentUser()
-
   return (
-    <div>
+    <div className='h-full'>
       <NavHeader title='Home' />
-      <h1>HomePage</h1>
-      {user?.name}
+      <PostWrapper />
     </div>
   )
 }

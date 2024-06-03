@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { UserAvart } from './UserAvatar'
+import { UserAvatar } from './UserAvatar'
 
 interface UserHeroProps {
   profileImage: string
@@ -23,7 +23,7 @@ export const UserHero: React.FC<UserHeroProps> = (props: UserHeroProps) => {
           />
         )}
         <div className='absolute -bottom-10 left-4'>
-          <UserAvart
+          <UserAvatar
             src={profileImage}
             name={name}
             size='large'

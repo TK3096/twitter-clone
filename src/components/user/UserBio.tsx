@@ -65,7 +65,7 @@ export const UserBio: React.FC<UserBioProps> = (props: UserBioProps) => {
 
           <div className='flex items-center gap-1'>
             <p className='text-white'>{followers}</p>
-            <p className='text-muted-foreground'>Follower</p>
+            <p className='text-muted-foreground'>Followers</p>
           </div>
         </div>
       </div>

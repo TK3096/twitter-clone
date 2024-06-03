@@ -5,6 +5,8 @@ import authConfig from '@/auth.config'
 
 import { db } from '@/lib/db'
 
+import { getUserById } from '@/data/user'
+
 export const {
   auth,
   signIn,
